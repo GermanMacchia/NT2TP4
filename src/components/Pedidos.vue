@@ -6,7 +6,7 @@
       <button class="btn btn-info m-3" v-on:click="getPostXHR()" type="button">XMLHttpRequest</button>
       <button class="btn btn-success m-3" @click="getPostFetch()" type="button">Fetch</button>
       <button class="btn btn-primary m-3" @click="getPostAxios()" type="button">Axios</button>
-      <button class="btn btn-danger m-3" v-on:click="posts=[]" type="button">Reset</button>
+      <button class="btn btn-danger m-3 rounded-circle" v-on:click="posts=[]" type="button">Reset</button>
     </div>
     <div v-if="posts.length" class="table-responsive border border-5 border-white mx-auto h-50 w-75"> 
       <table class="table table-dark ">
@@ -44,33 +44,51 @@
       }
     },
     methods: {
-      getPostXHR(){
-        const xhr = new XMLHttpRequest()
-        xhr.open('get', this.url)
-        xhr.addEventListener('load', () => {
-          if(xhr.status == 200){
-            let respuesta = JSON.parse(xhr.response)
-            this.posts = [...respuesta]
-          }
-          else{
-            console.error('Error XHR', xhr.status)
-          }
-        })
-        xhr.send()
+      async getPostXHR(){
+        try{
+          let respuesta = await new Promise((resolve, reject) =>{
+                            const xhr = new XMLHttpRequest()
+                            xhr.open('get', this.url)
+
+                            xhr.addEventListener('load', () => {
+                              if(xhr.status == 200){
+                                let respuesta = JSON.parse(xhr.response)
+                                resolve(respuesta)
+                              }
+                              else{
+                                let error = {
+                                  title:'Error XHR', 
+                                  status:xhr.status
+                                }
+                                reject(error)
+                              }
+                            })
+                            xhr.send()
+                          })
+          this.posts = [...respuesta]
+        }
+        catch(error){
+          console.error('Error XHRpromise', error)
+        }
       },
-      getPostFetch(){
-        fetch(this.url)
-          .then(respuesta => respuesta.json())
-          .then(respuesta => this.posts = [...respuesta]) 
-          .catch( error => console.error('Error fetch', error)) 
+      async getPostFetch(){
+        try{
+          let response = await fetch(this.url)
+          let respuesta = await response.json()
+          this.posts = [...respuesta]
+        }
+        catch(error){
+          console.error('Error fetch', error)
+        }
       },
-      getPostAxios(){
-        this.axios(this.url)
-          .then( respuesta => {
-              let { data: datos } = respuesta;
-              this.posts = datos 
-            })
-          .catch( error => console.error('Error axios', error))
+      async getPostAxios(){
+        try{
+          let { data } = await this.axios(this.url)
+          this.posts = data
+        }
+        catch(error){ 
+          console.error('Error axios', error)
+        }
       }
     },
     computed: {
