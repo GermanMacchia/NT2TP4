@@ -1,5 +1,5 @@
 <template>
-  <section class="src-components-formulario">
+  <section class="src-components-formulario  mx-auto w-75 mt-4">
 
     <vue-form :state="formState" @submit.prevent="enviar()">
       <!--Campo de Entrada nombre entre 5 y 15 caracteres--> 
@@ -68,11 +68,11 @@
     </vue-form>
 
     <hr>
-    <div class="jumbotron bg-dark">
+    <div class="jumbotron bg-dark border border-5 border-white">
       <h5>INGRESOS</h5>
       <!--Representar en un tabla por debajo del mismo, en el mismo momento del ingreso -->
         <div>
-          <table class="table table-dark">
+          <table class="table table-dark  ">
               <tr>
                   <th>Nombre</th>
                   <th>Edad</th>
@@ -84,11 +84,11 @@
                   <td>{{ usuario.email }}</td>
               </tr>
           </table>
-        </div>
+        </div>    
     </div>
 
     <hr>
-    <div class="d-flex">
+    <div class="d-flex mx-auto">
       <div class="jumbotron m-1 w-50 bg-dark " >
         <h5>DATOS</h5>
         <pre class="texto">{{ formData }}</pre>
@@ -144,7 +144,6 @@
 <style>
   .src-components-formulario {
     height: 100%;
-    margin: 5vh 25vw 0 25vw;
   }
 
   .form-group{
@@ -152,6 +151,7 @@
   }
   .texto{
     color: aliceblue;
+    height: 19vh;
   }
 
 </style>
